@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{{user.first_name}}'s Homepage</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'user/vendor/bootstrap/css/bootstrap.min.css' %} " rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <style>
+      body {
+        padding-top: 54px;
+      }
+      @media (min-width: 992px) {
+        body {
+          padding-top: 56px;
+        }
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Start Shopping</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                
+                <li class="nav-item">
+                    <form class="nav-link" action ='/product/search' method='POST'>
+                      {% csrf_token %}
+                      <input type="text" name='search'>
+                      <input type="submit" value='Search'>
+                    </form>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="/order/show">Orders</a>
+                    </li>
+                
+            
+              {% if request.session.user_id %}
+              <a class="nav-link" href="/user/show">Account
+                <span class="sr-only">(current)</span>
+              </a>
+            
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/user/logout">Logout</a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="/cart/show">Cart</a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+      <div class="row">
+            <div class = "user_info">
+                        
+                    <h4>User Information</h4>
+                    <p>First Name: {{user.first_name}}</p> 
+                    <p>Last Name: {{user.last_name}}</p>
+                    <p>Birthday: {{user.birthday}}</p>
+                    <p>Email: {{user.email}}</p>
+                    
+                    <!-- edit user information -->
+                    <form action="/user/edit" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Edit">
+                    </form>
+                    {% if address %}
+                     <!-- show the address information -->
+                    {% endif %}
+                    <!-- also make it so that if the user has a current address say edit, but new when no addresss -->
+                    <h4>Address: </h4>
+                    {% if address %}
+                    <table>
+                        <tr>
+                            <th>Street:</th>
+                            <th>City:</th>
+                            <th>State:</th>
+                            <th>Zip Code:</th>
+                            <th>Preference</th>
+                        </tr>
+                    {% for i in address %}
+                        <tr>
+                            <td>{{i.street}}</td>
+                            <td>{{i.city}}</td>
+                            <td>{{i.state}}</td>
+                            <td>{{i.zip_code}}</td>
+                            {% if i.preference == 0 %}
+                            <td>
+                                <form action="/address/preference/{{i.id}}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="submit" value="Make Preferred">
+                                </form>
+                            </td>
+                            {% else %}
+                            <td>
+                                Designated
+                            </td>
+                            {% endif %}
+                            <!-- make a way to show the selected here -->
+                            <td>
+                                <form action="/address/edit/{{i.id}}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="submit" value="Edit">
+                          </form>
+                            </td>
+                        </tr>
+                    
+                    {% endfor %}
+                    {% endif %}
+                    </table>
+                    <form action="/address/registration" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Add New Address">
+                    </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static 'user/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'user/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  </body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    {% load static %}
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Landing Page</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'product/index/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <style>
+      body {
+        padding-top: 54px;
+      }
+      @media (min-width: 992px) {
+        body {
+          padding-top: 56px;
+        }
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Ecommerce Shopping</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              {% if request.session.user_id %}
+              <a class="nav-link" href="/user/show">{{ 'Account' }}
+                <span class="sr-only">(current)</span>
+              </a>
+              
+            </li>
+            
+            <li class="nav-item">
+              <a class="nav-link" href="/user/logout">{{ 'Logout' }}</a>
+            </li>
+            {% endif %}
+            {% if not request.session.user_id %}
+            <li class="nav-item">
+              <a class="nav-link" href="/user/registration">Login</a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link" href="/cart/show">Cart</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <h1 class="mt-5">Ecommerce</h1>
+          <form action="/product/search" method="POST">
+            {% csrf_token %}
+            <input type="text" name="search">
+            <input type="submit" class="lead" value="Search" style="border-radius: 5px;">
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static 'product/index/vendor/jquery/jquery.min.js' %}%"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  </body>
+
+</html>

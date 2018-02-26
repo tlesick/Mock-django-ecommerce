@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Checkout Page</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'order/vendor/bootstrap/css/bootstrap.min.css' %} " rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <style>
+      body {
+        padding-top: 54px;
+      }
+      @media (min-width: 992px) {
+        body {
+          padding-top: 56px;
+        }
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Start Shopping</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              {% if request.session.user_id %}
+              <a class="nav-link" href="/user/show">Account
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/user/logout">Logout</a>
+            </li>
+            {% endif %}
+            {% if not request.session.user_id %}
+            <li class="nav-item">
+                <a class="nav-link" href="/user/registration">Login</a>
+              </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link" href="/cart/show">Cart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/">Search</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+                <table>
+                        {% if cart or ns_cart %}
+                        <tr>
+                            <th>Action:</th>
+                            <th>Category:</th>
+                            <th>Title::</th>
+                            <th>Price:</th>
+                            <th>Quantity:</th>
+                            <th>Subtotal:</th>
+                        </tr>
+                        {% else %}
+                        <h2>Sorry, you don't have anything in your cart</h2>
+                        {% endif %}
+                
+                        {% if cart %}
+                        {% for i in cart %}
+                            <tr>
+                                <td>
+                                        <form action="/cart/delete/{{i.id}}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="submit" value="Delete">
+                                        </form>
+                                        <form action="/product/show/{{i.product.id}}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="submit" value="View">
+                                        </form>
+                                </td>
+                                <td>{{i.product.category}}</td>
+                                <td>{{i.product.title}}</td>
+                                <td>${{i.product.price}}</td>
+                                <td style="text-align: center"> {{i.quantity}}</td>
+                                <td>${{i.subtotal}}</td>
+                            </tr>
+                        {% endfor %}
+                
+                        {% endif %}
+                        {% if ns_cart %}
+                        <!-- this will parse through product then quantity -->
+                        <tr>
+                            
+                        {% for i in ns_cart %}
+                            
+                            {% for key, value in i.items %}
+                                {% if key == 'product' %}
+                                    <td>
+                                        <form action="/cart/delete/{{value.id}}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="submit" value="Delete">
+                                        </form>
+                                        <form action="/product/show/{{value.id}}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="submit" value="View">
+                                        </form>
+                                    </td>
+                                    <td>{{value.category}}</td>
+                                    <td>{{value.title}}</td>
+                                    <td>${{value.price}}</td>
+                                
+                                {% else %}
+                                    
+                                    <td style="text-align: center" >{{value}}</td>
+                                {% endif %}
+                            
+                            {% endfor %}
+                            
+                            <!-- need a better way to display this -->
+                            
+                           
+                                
+                        </tr>
+                        {% endfor %}
+                
+                        {% endif %}
+                        <tr>
+                            <!-- sorry for the hackiness  -->
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            {% if total != 0 %}
+                            <td>{{total}}</td>
+                            {% endif %}
+                        </tr>
+                    </table>
+                    {% if cart or ns_cart %}
+                
+                    <form action="/order/checkout" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Checkout">
+                    </form>
+                
+                    {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static 'order/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'order/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  </body>
+
+</html>

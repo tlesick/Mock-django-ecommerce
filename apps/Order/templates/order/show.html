@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Checkout Page</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'order/show/vendor/bootstrap/css/bootstrap.css' %} " rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <style>
+      body {
+        padding-top: 54px;
+      }
+      @media (min-width: 992px) {
+        body {
+          padding-top: 56px;
+        }
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Start Shopping</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              {% if request.session.user_id %}
+              <a class="nav-link" href="/user/show">Account
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/user/logout">Logout</a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link" href="/cart/show">Cart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/">Search</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          
+           <ul>
+             <!-- orders is a dicitonary -->
+             {% for key, value in orders.items %}
+             
+                <li class='list'>
+                  <h4>Order # {{value.0.id}}</h4>
+                  <!-- values: 0= order, 1=product, 2=quantity, 3=subtotal -->
+                  <table class="products">
+                   <tr>
+                     <th>Products</th>
+                     <th>Price</th>
+                   </tr>
+                  {% for i in value.1 %}
+                   <tr>
+                     <td id='product-column'>{{i.title}}</td>
+                     <td>${{i.price}}</td>
+                   </tr>
+                   {% endfor %}
+                  </table>
+                  <table class="quantity">
+                    <tr>
+                      <th>Quantity</th>
+                    </tr>
+                    {% for i in value.2 %}
+                    <tr>
+                      <td>{{i}}</td>
+                    </tr>
+                    {% endfor %}
+                  </table>
+                  <table class="subtotal">
+                    <tr>
+                      <th>Subtotal</th>
+                    </tr>
+                    {% for i in value.3 %}
+                    <tr>
+                      <td>{{i}}</td>
+                    </tr>
+                    {% endfor %}
+                  </table>
+                  
+                  <p class="address"><span style="font-weight: bold;">Shipped to:</span>{{value.0.address.street}}, {{value.0.address.city}}, {{value.0.address.state}}</p>
+                
+
+                  <p class='price_1'>Tax: ${{value.0.tax}}</p>
+                  <p class='price_2'>Total: ${{value.0.total}}</p>
+                </li>
+             {% endfor %}
+            </ul>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static 'order/show/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'order/show/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  </body>
+
+</html>
