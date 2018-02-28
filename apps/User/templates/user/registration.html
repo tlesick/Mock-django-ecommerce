@@ -62,7 +62,7 @@
                     <a href="/user/show">{{ 'Account' }}</a>
                     <a href="/logout">{{ 'Logout' }}</a>
                 {% endif %}
-            <a href="/">Back</a>
+          
             <form action="/user/login" method="POST">
                 {% csrf_token %}
                 <label for="email">Email:</label>
