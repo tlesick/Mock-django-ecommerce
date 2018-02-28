@@ -80,13 +80,16 @@ class UserManager(models.Manager):
 
     # postdata = dictionary
     def login(self, postdata):
-        database_user = User.objects.get(email = postdata['email'])
-        
-        if bcrypt.checkpw(postdata['password'].encode(), database_user.password.encode()):
-            return {'logged_user': database_user}
-        else:
-            return {'err_messages': ['Email and Password combination is Invalid']}
+        try:
 
+            database_user = User.objects.get(email = postdata['email'])
+            
+            if bcrypt.checkpw(postdata['password'].encode(), database_user.password.encode()):
+                return {'logged_user': database_user}
+            else:
+                return {'err_messages': ['Email and Password combination is invalid']}
+        except:
+            return {'err_messages': ["Email and Password combination is invalid"]}
     # postdata = dictionary
     # user_id = integer
     def edit(self, postdata, user_id):
