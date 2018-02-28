@@ -18,8 +18,8 @@ def index(request):
      
         return render(request, 'product/index.html')
 
+
 def search(request):
-    user = User.objects.get(id=request.session['user_id'])
     if request.POST['search'] is None:
         products = Product.objects.all()
         content ={

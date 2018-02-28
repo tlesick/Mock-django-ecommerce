@@ -35,7 +35,10 @@ def checkout(request):
 
         return render(request, 'order/checkout.html', content)
     except:
-        return render(request, 'order/checkout.html')
+        content = {
+            'error': ["Please Login to Checkout"]
+        }
+        return render(request, 'user/registration.html', content)
      
 
 #     Set your secret key: remember to change this to your live secret key in production
